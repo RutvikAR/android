@@ -1,97 +1,71 @@
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+package com.example.map_custonm_marker
 
-public class MapsActivity
-	extends FragmentActivity implements OnMapReadyCallback {
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import androidx.core.content.ContextCompat
 
-	private GoogleMap mMap;
+// Importing maps libraries 
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.example.map_custonm_marker.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_maps);
-		// Obtain the SupportMapFragment and get notified
-		// when the map is ready to be used.
-		SupportMapFragment mapFragment
-			= (SupportMapFragment)
-				getSupportFragmentManager()
-					.findFragmentById(R.id.map);
-		mapFragment.getMapAsync(this);
+// class 
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+	private lateinit var mMap: GoogleMap
+	private lateinit var binding: ActivityMapsBinding
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+
+		binding = ActivityMapsBinding.inflate(layoutInflater)
+		setContentView(binding.root)
+
+		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
+		val mapFragment = supportFragmentManager
+			.findFragmentById(R.id.map) as SupportMapFragment
+		mapFragment.getMapAsync(this)
 	}
 
-	/**
-	* Manipulates the map once available.
-	* This callback is triggered when the map is ready to
-	* be used. This is where we can add markers or lines,
-	* add listeners or move the camera. In this case, we
-	* just add a marker near Sydney, Australia. If Google
-	* Play services is not installed on the device, the
-	* user will be prompted to install it inside the
-	* SupportMapFragment. This method will only be
-	* triggered once the user has installed Google Play
-	* services and returned to the app.
-	*/
-	@Override public void onMapReady(GoogleMap googleMap)
-	{
-		mMap = googleMap;
+	override fun onMapReady(googleMap: GoogleMap) {
+		mMap = googleMap
 
 		// Add a marker in Sydney and move the camera
-		LatLng sydney = new LatLng(-34, 151);
-		mMap.addMarker(new MarkerOptions()
-						.position(sydney)
-						.title("Marker in Sydney")
-						// below line is use to add
-						// custom marker on our map.
-						.icon(BitmapFromVector(
-							getApplicationContext(),
-							R.drawable.ic_flag)));
-		mMap.moveCamera(
-			CameraUpdateFactory.newLatLng(sydney));
+		val sydney = LatLng(-34.0, 151.0)
+
+		val marker=MarkerOptions().position(sydney).title("Marker in Sydney")
+		//set custom icon
+		marker.icon(BitmapFromVector(getApplicationContext(), R.drawable.baseline_flag_24))
+		//add marker
+		mMap.addMarker(marker)
+
+		mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
 	}
-
-	private BitmapDescriptor
-	BitmapFromVector(Context context, int vectorResId)
-	{
-		// below line is use to generate a drawable.
-		Drawable vectorDrawable = ContextCompat.getDrawable(
-			context, vectorResId);
-
-		// below line is use to set bounds to our vector
-		// drawable.
-		vectorDrawable.setBounds(
-			0, 0, vectorDrawable.getIntrinsicWidth(),
-			vectorDrawable.getIntrinsicHeight());
-
-		// below line is use to create a bitmap for our
-		// drawable which we have added.
-		Bitmap bitmap = Bitmap.createBitmap(
-			vectorDrawable.getIntrinsicWidth(),
-			vectorDrawable.getIntrinsicHeight(),
-			Bitmap.Config.ARGB_8888);
-
-		// below line is use to add bitmap in our canvas.
-		Canvas canvas = new Canvas(bitmap);
-
-		// below line is use to draw our
-		// vector drawable in canvas.
-		vectorDrawable.draw(canvas);
-
-		// after generating our bitmap we are returning our
-		// bitmap.
-		return BitmapDescriptorFactory.fromBitmap(bitmap);
-	}
+private fun BitmapFromVector(context:Context,vectorResId:Int): BitmapDescriptor? {
+	//drawable generator
+	var vectorDrawable: Drawable
+	vectorDrawable= ContextCompat.getDrawable(context,vectorResId)!!
+	vectorDrawable.setBounds(0,0,vectorDrawable.intrinsicWidth,vectorDrawable.intrinsicHeight)
+	//bitmap genarator
+	var bitmap:Bitmap
+	bitmap= Bitmap.createBitmap(vectorDrawable.intrinsicWidth,vectorDrawable.intrinsicHeight,Bitmap.Config.ARGB_8888)
+	//canvas genaret
+	var canvas:Canvas
+	//pass bitmap in canvas constructor
+	canvas= Canvas(bitmap)
+	//pass canvas in drawable
+	vectorDrawable.draw(canvas)
+		//return BitmapDescriptorFactory
+	return BitmapDescriptorFactory.fromBitmap(bitmap)
+}
 }
