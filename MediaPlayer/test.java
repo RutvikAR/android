@@ -24,8 +24,7 @@ public class MapsActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps);
-		// Obtain the SupportMapFragment and get notified
-		// when the map is ready to be used.
+	
 		SupportMapFragment mapFragment
 			= (SupportMapFragment)
 				getSupportFragmentManager()
@@ -33,29 +32,15 @@ public class MapsActivity
 		mapFragment.getMapAsync(this);
 	}
 
-	/**
-	* Manipulates the map once available.
-	* This callback is triggered when the map is ready to
-	* be used. This is where we can add markers or lines,
-	* add listeners or move the camera. In this case, we
-	* just add a marker near Sydney, Australia. If Google
-	* Play services is not installed on the device, the
-	* user will be prompted to install it inside the
-	* SupportMapFragment. This method will only be
-	* triggered once the user has installed Google Play
-	* services and returned to the app.
-	*/
+	
 	@Override public void onMapReady(GoogleMap googleMap)
 	{
 		mMap = googleMap;
-
-		// Add a marker in Sydney and move the camera
 		LatLng sydney = new LatLng(-34, 151);
 		mMap.addMarker(new MarkerOptions()
 						.position(sydney)
 						.title("Marker in Sydney")
-						// below line is use to add
-						// custom marker on our map.
+						
 						.icon(BitmapFromVector(
 							getApplicationContext(),
 							R.drawable.ic_flag)));
@@ -70,28 +55,21 @@ public class MapsActivity
 		Drawable vectorDrawable = ContextCompat.getDrawable(
 			context, vectorResId);
 
-		// below line is use to set bounds to our vector
-		// drawable.
 		vectorDrawable.setBounds(
 			0, 0, vectorDrawable.getIntrinsicWidth(),
 			vectorDrawable.getIntrinsicHeight());
-
-		// below line is use to create a bitmap for our
-		// drawable which we have added.
+		
 		Bitmap bitmap = Bitmap.createBitmap(
 			vectorDrawable.getIntrinsicWidth(),
 			vectorDrawable.getIntrinsicHeight(),
 			Bitmap.Config.ARGB_8888);
 
-		// below line is use to add bitmap in our canvas.
+		
 		Canvas canvas = new Canvas(bitmap);
 
-		// below line is use to draw our
-		// vector drawable in canvas.
+		
 		vectorDrawable.draw(canvas);
 
-		// after generating our bitmap we are returning our
-		// bitmap.
 		return BitmapDescriptorFactory.fromBitmap(bitmap);
 	}
 }
